@@ -3,6 +3,13 @@ dist: bionic
 language: python
 python: 3.8
 
+branches:
+  only:
+    # Build tags and branches named master or starting with
+    # 'v' followed by a digit, such as for version tags.
+    - master
+    - /^v\d.*$/
+
 services:
   - docker
 
