@@ -1,0 +1,20 @@
+os: linux
+dist: bionic
+language: python
+
+services:
+  - docker
+
+env:
+  global:
+    - IMAGE_NAME=docker-pyenv
+
+jobs:
+  include:
+    - stage: Build
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - travis_wait 60 docker build --pull --no-cache -t $IMAGE_NAME .
+      - docker run --rm -it $IMAGE_NAME pyenv versions
+      - docker tag $IMAGE_NAME $DOCKER_USERNAME/$IMAGE_NAME
+      - docker push $DOCKER_USERNAME/$IMAGE_NAME

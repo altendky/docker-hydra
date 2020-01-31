@@ -1,0 +1,35 @@
+ARG FROM=ubuntu:19.10
+FROM $FROM
+
+ENV PYENV_ROOT=/opt/pyenv
+ENV PATH=$PYENV_ROOT/bin:$PATH
+
+RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+RUN echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -y
+RUN apt-get upgrade -y
+
+# for having the basics
+RUN apt-get install -y git virtualenv curl wget vim nano tree
+
+# for pyenv
+RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
+
+# install pyenv
+RUN curl https://pyenv.run | bash
+
+# install several pythons
+RUN ["/bin/bash", "-c", "set -vx; for v in 2.7 3.{5,6,7,8} pypy{2.7-7.{0,1,2,3},3.6-7.{0,1,2,3}}; do pyenv install $(pyenv install --list | grep \"^  $v\" | grep -v 'dev' | tail -n 1); done"]
+RUN pyenv global $(for v in $(pyenv versions --bare | sort --reverse --general-numeric-sort); do echo $(pyenv install --list | grep "^  $v" | grep -v 'dev' | tail -n 1); done)
+
+RUN mkdir /wd
+VOLUME /wd
+WORKDIR /wd
