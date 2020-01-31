@@ -15,7 +15,7 @@ services:
 
 env:
   global:
-    - IMAGE_NAME=docker-pyenv
+    - IMAGE_NAME=hydra
 
 jobs:
   include:
