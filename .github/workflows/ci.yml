@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+  pull_request:
+
+env:
+  IMAGE_NAME: docker-hydra
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - os: ubuntu-18.04
+            base: ubuntu:19.10
+            platform: ubuntu
+#          - os: windows-2019
+#            base: ? https://hub.docker.com/_/microsoft-windows
+#            platform: windows
+#          - os: macos-10.15
+#            base: ?
+#            platform: macos
+    steps:
+      - uses: actions/checkout@v1
+      - name: build
+        run: |
+          echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          docker build --pull --no-cache -t ${IMAGE_NAME} -e "FROM=${{ matrix.config.base }}" Dockerfile.${{ matrix.config.platform }}
+          docker run --rm -it ${IMAGE_NAME} pyenv versions
+          docker tag ${IMAGE_NAME} ${DOCKER_USERNAME}/${IMAGE_NAME}
+          docker push ${DOCKER_USERNAME}/${IMAGE_NAME}
