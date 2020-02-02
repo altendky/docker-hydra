@@ -35,3 +35,6 @@ jobs:
           docker run --rm -it ${IMAGE_NAME} pyenv versions
           docker tag ${IMAGE_NAME} ${DOCKER_USERNAME}/${IMAGE_NAME}
           docker push ${DOCKER_USERNAME}/${IMAGE_NAME}
+        env:
+          DOCKER_USERNAME: ${{ secrets.docker_username }}
+          DOCKER_PASSWORD: ${{ secrets.docker_password }}
