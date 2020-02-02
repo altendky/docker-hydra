@@ -31,7 +31,7 @@ jobs:
       - name: build
         run: |
           echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-          docker build --pull --no-cache -t "${IMAGE_NAME}" --build-arg FROM='${{ matrix.config.base }}' 'Dockerfile.${{ matrix.config.platform }}'
+          docker build --pull --no-cache --tag "${IMAGE_NAME}:latest" --build-arg FROM='${{ matrix.config.base }}' --file 'Dockerfile.${{ matrix.config.platform }}' .
           docker run --rm -it "${IMAGE_NAME}" pyenv versions
           docker tag "${IMAGE_NAME}" "${DOCKER_USERNAME}/${IMAGE_NAME}"
           docker push "${DOCKER_USERNAME}/${IMAGE_NAME}"
