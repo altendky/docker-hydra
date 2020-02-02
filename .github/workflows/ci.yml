@@ -9,7 +9,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: docker-hydra
+  IMAGE_NAME: hydra
 
 jobs:
   ci:
@@ -30,6 +30,8 @@ jobs:
 #          - os: macos-10.15
 #            base: ?
 #            platform: macos
+    env:
+      IMAGE_NAME: ${IMAGE_NAME}-${{ matrix.config.platform }}
     steps:
       - uses: actions/checkout@v1
       - name: build
