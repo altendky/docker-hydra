@@ -34,13 +34,13 @@ jobs:
       - name: build
         run: |
           docker build --pull --no-cache --tag "${IMAGE_NAME}:latest" --build-arg FROM='${{ matrix.config.base }}' --build-arg PYTHONS="${{ matrix.pythons }}" --file 'Dockerfile.${{ matrix.config.platform }}' .
-          docker tag "${IMAGE_NAME}" "${DOCKER_USERNAME}/${IMAGE_NAME}"
+          docker tag "${IMAGE_NAME}:latest" "${DOCKER_USERNAME}/${IMAGE_NAME}"
         env:
           DOCKER_USERNAME: ${{ secrets.docker_username }}
           DOCKER_PASSWORD: ${{ secrets.docker_password }}
       - name: report
         run: |
-          docker run --rm -it "${IMAGE_NAME}" pyenv versions
+          docker run --rm "${IMAGE_NAME}:latest" pyenv versions
         env:
           DOCKER_USERNAME: ${{ secrets.docker_username }}
           DOCKER_PASSWORD: ${{ secrets.docker_password }}
