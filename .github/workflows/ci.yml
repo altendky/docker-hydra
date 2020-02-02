@@ -16,6 +16,9 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     strategy:
       matrix:
+        pythons:
+          - (2.7 3.{5,6,7,8} pypy{2.7-7.{0,1,2,3},3.6-7.{0,1,2,3}})
+          - (3.{6,7,8} pypy3.6-7.3)
         config:
           - os: ubuntu-18.04
             base: ubuntu:19.10
@@ -31,7 +34,7 @@ jobs:
       - name: build
         run: |
           echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-          docker build --pull --no-cache --tag "${IMAGE_NAME}:latest" --build-arg FROM='${{ matrix.config.base }}' --file 'Dockerfile.${{ matrix.config.platform }}' .
+          docker build --pull --no-cache --tag "${IMAGE_NAME}:latest" --build-arg FROM='${{ matrix.config.base }}' --build-arg PYTHONS="${{ matrix.pythons }}" --file 'Dockerfile.${{ matrix.config.platform }}' .
           docker run --rm -it "${IMAGE_NAME}" pyenv versions
           docker tag "${IMAGE_NAME}" "${DOCKER_USERNAME}/${IMAGE_NAME}"
           docker push "${DOCKER_USERNAME}/${IMAGE_NAME}"
