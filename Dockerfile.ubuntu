@@ -29,7 +29,8 @@ xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
 RUN curl https://pyenv.run | bash
 
 # install several pythons
-RUN ["/bin/bash", "-c", "set -vx; for v in \"${PYTHONS[@]}\"; do pyenv install $(pyenv install --list | grep \"^  $v\" | grep -v 'dev' | tail -n 1); done"]
+RUN bash -c set
+RUN ["/bin/bash", "-c", "set -vx; for v in $(eval \"export PYTHONS=${PYTHONS}\"; for p in ${PYTHONS[@]}; do echo $p; done); do pyenv install $(pyenv install --list | grep \"^  $v\" | grep -v 'dev' | tail -n 1); done"]
 RUN pyenv global $(for v in $(pyenv versions --bare | sort --reverse --general-numeric-sort); do echo $(pyenv install --list | grep "^  $v" | grep -v 'dev' | tail -n 1); done)
 
 RUN mkdir /wd
