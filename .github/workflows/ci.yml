@@ -8,9 +8,6 @@ on:
       - v*
   pull_request:
 
-env:
-  IMAGE_NAME: hydra
-
 jobs:
   ci:
     runs-on: ${{ matrix.config.os }}
@@ -31,7 +28,7 @@ jobs:
 #            base: ?
 #            platform: macos
     env:
-      IMAGE_NAME: ${IMAGE_NAME}-${{ matrix.config.platform }}
+      IMAGE_NAME: hydra-${{ matrix.config.platform }}
     steps:
       - uses: actions/checkout@v1
       - name: build
