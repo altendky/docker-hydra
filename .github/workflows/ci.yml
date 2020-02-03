@@ -57,7 +57,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.docker_username }}
           DOCKER_PASSWORD: ${{ secrets.docker_password }}
       - name: Use Image
-        uses: docker://altendky/${{ env.IMAGE_NAME_TAG }}
+        uses: docker://altendky/${IMAGE_NAME_TAG}
       - name: Test
         run: |
           pyenv versions
