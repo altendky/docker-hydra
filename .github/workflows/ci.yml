@@ -42,8 +42,9 @@ jobs:
           docker run --rm "${IMAGE_NAME}:latest" pyenv versions
           docker run --rm "${IMAGE_NAME}:latest" pip --version
           docker run --rm "${IMAGE_NAME}:latest" pip freeze --all
-      - name: Test
+      - name: Use Image
         uses: hydra:latest
+      - name: Test
         run: |
           pyenv versions
           pip --version
