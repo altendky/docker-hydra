@@ -28,7 +28,7 @@ jobs:
 #            base: ?
 #            platform: macos
     env:
-      IMAGE_NAME: hydra-${{ matrix.config.platform }}
+      IMAGE_NAME: hydra_testing-${{ matrix.config.platform }}
     steps:
       - uses: actions/checkout@v1
       - name: Build
@@ -42,17 +42,17 @@ jobs:
           docker run --rm "${IMAGE_NAME}:latest" pyenv versions
           docker run --rm "${IMAGE_NAME}:latest" pip --version
           docker run --rm "${IMAGE_NAME}:latest" pip freeze --all
+      - name: Upload
+        run: |
+          echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          docker push "${DOCKER_USERNAME}/${IMAGE_NAME}"
+        env:
+          DOCKER_USERNAME: ${{ secrets.docker_username }}
+          DOCKER_PASSWORD: ${{ secrets.docker_password }}
       - name: Use Image
-        uses: hydra:latest
+        uses: docker://altendky/hydra:latest
       - name: Test
         run: |
           pyenv versions
           pip --version
           pip freeze --all
-#      - name: Upload
-#        run: |
-#          echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-#          docker push "${DOCKER_USERNAME}/${IMAGE_NAME}"
-#        env:
-#          DOCKER_USERNAME: ${{ secrets.docker_username }}
-#          DOCKER_PASSWORD: ${{ secrets.docker_password }}
