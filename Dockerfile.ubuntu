@@ -6,9 +6,6 @@ ARG PYTHONS="(2.7 3.{5,6,7,8} pypy{2.7-7.{0,1,2,3},3.6-7.{0,1,2,3}})"
 ENV PYENV_ROOT=/opt/pyenv
 ENV PATH=$PYENV_ROOT/bin:$PATH
 
-RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-RUN echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
-
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
@@ -32,6 +29,10 @@ RUN curl https://pyenv.run | bash
 RUN bash -c set
 RUN ["/bin/bash", "-c", "set -vx; for v in $(eval \"export PYTHONS=${PYTHONS}\"; for p in ${PYTHONS[@]}; do echo $p; done); do pyenv install $(pyenv install --list | grep \"^  $v\" | grep -v 'dev' | tail -n 1); done"]
 RUN pyenv global $(for v in $(pyenv versions --bare | sort --reverse --general-numeric-sort); do echo $(pyenv install --list | grep "^  $v" | grep -v 'dev' | tail -n 1); done)
+
+COPY docker-entrypoint.ubuntu.sh /usr/local/bin/
+RUN chmod a+x /usr/local/bin/docker-entrypoint.ubuntu.sh
+ENTRYPOINT ["docker-entrypoint.ubuntu.sh"]
 
 RUN mkdir /wd
 VOLUME /wd
