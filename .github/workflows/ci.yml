@@ -14,9 +14,14 @@ jobs:
     strategy:
       matrix:
         pythons:
-#          - (2.7 3.{5,6,7,8} pypy{2.7-7.{0,1,2,3},3.6-7.{0,1,2,3}})
-#          - (3.{6,7,8} pypy3.6-7.3)
-          - (3.8 pypy3.6-7.3)
+          - name: 2-3-minors
+            versions: (2.7 3.{5,6,7,8} pypy{2,3})
+          - name: 2-3-latest
+            versions: (2 3 pypy{2,3})
+          - name: 3-minors
+            versions: (3.{5,6,7,8} pypy3)
+          - name: 3-latest
+            versions: (3 pypy3)
         config:
           - os: ubuntu-18.04
             base: ubuntu:19.10
@@ -28,29 +33,30 @@ jobs:
 #            base: ?
 #            platform: macos
     env:
-      IMAGE_NAME: hydra_testing-${{ matrix.config.platform }}
+      IMAGE_NAME: hydra_testing
+      IMAGE_TAG: ${IMAGE_NAME}:${{ matrix.config.platform }}-${{ matrix.pythons.name }}
     steps:
       - uses: actions/checkout@v1
       - name: Build
         run: |
-          docker build --pull --no-cache --tag "${IMAGE_NAME}:latest" --build-arg FROM='${{ matrix.config.base }}' --build-arg PYTHONS="${{ matrix.pythons }}" --file 'Dockerfile.${{ matrix.config.platform }}' .
-          docker tag "${IMAGE_NAME}:latest" "${DOCKER_USERNAME}/${IMAGE_NAME}"
+          docker build --pull --no-cache --tag "${IMAGE_TAG}" --build-arg FROM='${{ matrix.config.base }}' --build-arg PYTHONS="${{ matrix.pythons.versions }}" --file 'Dockerfile.${{ matrix.config.platform }}' .
+          docker tag "${IMAGE_TAG}" "${DOCKER_USERNAME}/${IMAGE_NAME}"
         env:
           DOCKER_USERNAME: ${{ secrets.docker_username }}
       - name: Report
         run: |
-          docker run --rm "${IMAGE_NAME}:latest" pyenv versions
-          docker run --rm "${IMAGE_NAME}:latest" pip --version
-          docker run --rm "${IMAGE_NAME}:latest" pip freeze --all
+          docker run --rm "${IMAGE_TAG}" pyenv versions
+          docker run --rm "${IMAGE_TAG}" pip --version
+          docker run --rm "${IMAGE_TAG}" pip freeze --all
       - name: Upload
         run: |
           echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-          docker push "${DOCKER_USERNAME}/${IMAGE_NAME}"
+          docker push "${DOCKER_USERNAME}/${IMAGE_TAG}"
         env:
           DOCKER_USERNAME: ${{ secrets.docker_username }}
           DOCKER_PASSWORD: ${{ secrets.docker_password }}
       - name: Use Image
-        uses: docker://altendky/hydra:latest
+        uses: docker://altendky/${IMAGE_TAG}
       - name: Test
         run: |
           pyenv versions
