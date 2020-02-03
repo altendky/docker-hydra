@@ -42,6 +42,12 @@ jobs:
           docker run --rm "${IMAGE_NAME}:latest" pyenv versions
           docker run --rm "${IMAGE_NAME}:latest" pip --version
           docker run --rm "${IMAGE_NAME}:latest" pip freeze --all
+      - name: Test
+        uses: hydra:latest
+        run: |
+          pyenv versions
+          pip --version
+          pip freeze --all
       - name: Upload
         run: |
           echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
