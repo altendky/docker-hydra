@@ -15,8 +15,9 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 #RUN ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';", "Invoke-WebRequest -UseBasicParsing https://chocolatey.org/install.ps1 | Invoke-Expression"]
 #RUN ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';", "choco install msys2 --params \"/NoUpdate /InstallDir:C:/msys2\""]
 RUN Invoke-WebRequest -UseBasicParsing https://chocolatey.org/install.ps1 | Invoke-Expression
-RUN choco feature enable --no-progress
-RUN choco install msys2 -y --params "/NoUpdate /InstallDir:C:/msys2"
+RUN choco feature disable --name=showDownloadProgress
+RUN choco feature enable --name=allowGlobalConfirmation
+RUN choco install msys2 --params "/NoUpdate /InstallDir:C:/msys2"
 
 SHELL ["C:/msys2/bin/bash", "-c"]
 
