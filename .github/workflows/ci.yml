@@ -33,9 +33,7 @@ jobs:
 #            base: ?
 #            platform: macos
     env:
-      IMAGE_NAME: hydra_testing
-      IMAGE_TAG: ${{ matrix.config.platform }}-${{ matrix.pythons.name }}
-      IMAGE_NAME_TAG: ${IMAGE_NAME}:${IMAGE_TAG}
+      IMAGE_NAME_TAG: hydra_testing:${{ matrix.config.platform }}-${{ matrix.pythons.name }}
     steps:
       - uses: actions/checkout@v1
       - name: Build
