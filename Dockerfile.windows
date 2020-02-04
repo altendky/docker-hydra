@@ -10,7 +10,8 @@ ENV PYENV=${PYENV_ROOT}/pyenv-win
 ENV PATH=${PYENV}/bin;${PYENV}/shims;$PATH
 
 # for having the basics
-shell ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+SHELL ["powershell", "-Command"]
+#SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 #RUN ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';", "Invoke-WebRequest -UseBasicParsing https://chocolatey.org/install.ps1 | Invoke-Expression"]
 #RUN ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';", "choco install msys2 --params \"/NoUpdate /InstallDir:C:/msys2\""]
 RUN echo blue and red
