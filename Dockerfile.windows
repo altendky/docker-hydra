@@ -1,0 +1,20 @@
+ARG FROM=mcr.microsoft.com/windows/servercore:ltsc2019
+FROM $FROM
+
+ARG PYTHONS="(2.7 3.{5,6,7,8} pypy{2.7-7.{0,1,2,3},3.6-7.{0,1,2,3}})"
+
+ENV PYENV_ROOT=C:/pyenv
+ENV PYENV=${PYENV_ROOT}/pyenv-win
+ENV PATH=${PYENV}/bin;${PYENV}/shims;$PATH
+
+# install pyenv
+RUN git clone https://github.com/pyenv-win/pyenv-win.git "${PYENV_ROOT}"
+
+# install several pythons
+RUN bash -c set
+RUN ["/bin/bash", "-c", "set -vx; for v in $(eval \"export PYTHONS=${PYTHONS}\"; for p in ${PYTHONS[@]}; do echo $p; done); do pyenv install $(pyenv install --list | grep \"^  $v\" | grep -v 'dev' | tail -n 1); done"]
+RUN pyenv global $(for v in $(pyenv versions --bare | sort --reverse --general-numeric-sort); do echo $(pyenv install --list | grep "^  $v" | grep -v 'dev' | tail -n 1); done)
+
+RUN mkdir C:/wd
+VOLUME C:/wd
+WORKDIR C:/wd
