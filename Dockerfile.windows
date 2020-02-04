@@ -7,6 +7,9 @@ ENV PYENV_ROOT=C:/pyenv
 ENV PYENV=${PYENV_ROOT}/pyenv-win
 ENV PATH=${PYENV}/bin;${PYENV}/shims;$PATH
 
+# for having the basics
+RUN choco install -y git --params "/GitOnlyOnPath /NoAutoCrlf"
+
 # install pyenv
 RUN git clone https://github.com/pyenv-win/pyenv-win.git "${PYENV_ROOT}"
 
