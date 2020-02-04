@@ -1,6 +1,8 @@
 ARG FROM=mcr.microsoft.com/windows/servercore:ltsc2019
 FROM $FROM
 
+ARG chocolateyVersion='0.10.15'
+
 ARG PYTHONS="(2.7 3.{5,6,7,8} pypy{2.7-7.{0,1,2,3},3.6-7.{0,1,2,3}})"
 
 ENV PYENV_ROOT=C:/pyenv
@@ -8,7 +10,13 @@ ENV PYENV=${PYENV_ROOT}/pyenv-win
 ENV PATH=${PYENV}/bin;${PYENV}/shims;$PATH
 
 # for having the basics
-RUN choco install -y git --params "/GitOnlyOnPath /NoAutoCrlf"
+RUN ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';", "Invoke-WebRequest -UseBasicParsing https://chocolatey.org/install.ps1 | Invoke-Expression"]
+RUN ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';", "choco install msys2 --params \"/NoUpdate /InstallDir:C:/msys2\""]
+
+SHELL ["C:/msys2/bin/bash", "-c"]
+
+RUN pacman -Syuu
+RUN pacman -S git
 
 # install pyenv
 RUN git clone https://github.com/pyenv-win/pyenv-win.git "${PYENV_ROOT}"
