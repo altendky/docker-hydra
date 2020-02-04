@@ -40,17 +40,20 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build
+        shell: bash
         run: |
           docker build --pull --no-cache --tag "${IMAGE_NAME_TAG}" --build-arg FROM='${{ matrix.config.base }}' --build-arg PYTHONS="${{ matrix.pythons.versions }}" --file 'Dockerfile.${{ matrix.config.platform }}' .
           docker tag "${IMAGE_NAME_TAG}" "${DOCKER_USERNAME}/${IMAGE_NAME_TAG}"
         env:
           DOCKER_USERNAME: ${{ secrets.docker_username }}
       - name: Report
+        shell: bash
         run: |
           docker run --rm "${IMAGE_NAME_TAG}" pyenv versions
           docker run --rm "${IMAGE_NAME_TAG}" pip --version
           docker run --rm "${IMAGE_NAME_TAG}" pip freeze --all
       - name: Upload
+        shell: bash
         run: |
           echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
           docker push "${DOCKER_USERNAME}/${IMAGE_NAME_TAG}"
