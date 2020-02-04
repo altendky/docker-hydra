@@ -8,9 +8,9 @@ ARG PYTHONS="(2.7 3.{5,6,7,8} pypy{2.7-7.{0,1,2,3},3.6-7.{0,1,2,3}})"
 SHELL ["powershell", "-command"]
 RUN Write-Host hello
 
-ENV PYENV_ROOT=C:/pyenv
-ENV PYENV=${PYENV_ROOT}/pyenv-win
-ENV PATH=${PYENV}/bin;${PYENV}/shims;$PATH
+ENV PYENV_ROOT=C:\\pyenv
+ENV PYENV=${PYENV_ROOT}\\pyenv-win
+ENV PATH=${PYENV}\\bin;${PYENV}\\shims;$PATH
 
 # for having the basics
 #SHELL ["powershell", "-Command"]
