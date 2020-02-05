@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+  pull_request:
+  schedule:
+    # 05:37 UTC
+    - cron: '37 5 * * *'
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        pythons:
+          - name: 2-3-minors
+            versions: (2.7 3.{5,6,7,8} pypy{2,3})
+          - name: 2-3-latest
+            versions: (2 3 pypy{2,3})
+          - name: 3-minors
+            versions: (3.{5,6,7,8} pypy3)
+          - name: 3-latest
+            versions: (3 pypy3)
+        config:
+          - os: ubuntu-18.04
+            base: ubuntu:19.10
+            platform: ubuntu
+#          - os: windows-2019
+#            base: mcr.microsoft.com/windows/servercore:ltsc2019
+#            platform: windows
+#          - os: macos-10.15
+#            base: ?
+#            platform: macos
+    env:
+      IMAGE_NAME: hydra
+      IMAGE_TAG: ${{ matrix.config.platform }}-${{ matrix.pythons.name }}
+    steps:
+      - name: PR Name Suffix
+        if: github.ref != 'master'
+        shell: bash
+        run: |
+          echo "::set-env name=IMAGE_NAME::${IMAGE_NAME}-dev"
+      - name: Name and Tag
+        shell: bash
+        run: |
+          echo "::set-env name=IMAGE_NAME_TAG::${IMAGE_NAME}:${IMAGE_TAG}"
+      - uses: actions/checkout@v1
+      - name: Build
+        shell: bash
+        run: |
+          docker build --pull --no-cache --tag "${IMAGE_NAME_TAG}" --build-arg FROM='${{ matrix.config.base }}' --build-arg PYTHONS="${{ matrix.pythons.versions }}" --file 'Dockerfile.${{ matrix.config.platform }}' .
+          docker tag "${IMAGE_NAME_TAG}" "${DOCKER_USERNAME}/${IMAGE_NAME_TAG}"
+        env:
+          DOCKER_USERNAME: ${{ secrets.docker_username }}
+      - name: Report
+        shell: bash
+        run: |
+          docker run --rm "${IMAGE_NAME_TAG}" pyenv versions
+          docker run --rm "${IMAGE_NAME_TAG}" pip --version
+          docker run --rm "${IMAGE_NAME_TAG}" pip freeze --all
+      - name: Upload
+        shell: bash
+        run: |
+          echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          docker push "${DOCKER_USERNAME}/${IMAGE_NAME_TAG}"
+        env:
+          DOCKER_USERNAME: ${{ secrets.docker_username }}
+          DOCKER_PASSWORD: ${{ secrets.docker_password }}
