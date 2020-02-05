@@ -14,7 +14,7 @@ on:
 jobs:
   ci:
     runs-on: ${{ matrix.config.os }}
-    if: ((${{ matrix.name }} == 'hydra') and (${{ github.ref }} == 'master)) or ((${{ matrix.name }} == 'hydra_testing') and (${{ github.ref }} != 'master))
+    if: ((matrix.name == 'hydra') and (github.ref == 'master')) or ((matrix.name == 'hydra_testing') and (github.ref != 'master'))
     strategy:
       matrix:
         name:
