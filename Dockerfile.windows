@@ -20,7 +20,7 @@ RUN choco feature enable --name=allowGlobalConfirmation
 RUN choco install msys2 --params \"/NoUpdate /InstallDir:C:/msys2\"
 RUN Get-Content C:/ProgramData/chocolatey/logs/chocolatey.log
 
-SHELL ["C:/msys2/usr/bin/bash", "-c"]
+SHELL ["C:/msys2/usr/bin/bash", "--login", "-c"]
 
 RUN pacman -Syuu
 RUN pacman -S git
