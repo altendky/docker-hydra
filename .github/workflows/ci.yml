@@ -36,14 +36,14 @@ jobs:
 #            base: ?
 #            platform: macos
     env:
-      IMAGE_BASE_NAME: hydra
+      IMAGE_NAME: hydra
       IMAGE_TAG: ${{ matrix.config.platform }}-${{ matrix.pythons.name }}
     steps:
       - name: PR Name Suffix
         if: github.ref != 'master'
         shell: bash
         run: |
-          echo "::set-env name=IMAGE_NAME::${IMAGE_BASE_NAME}_dev"
+          echo "::set-env name=IMAGE_NAME::${IMAGE_NAME}_dev"
       - name: Name and Tag
         shell: bash
         run: |
