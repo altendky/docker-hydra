@@ -43,7 +43,7 @@ jobs:
         if: github.ref != 'master'
         shell: bash
         run: |
-          echo "::set-env name=IMAGE_NAME::${IMAGE_NAME}_dev"
+          echo "::set-env name=IMAGE_NAME::${IMAGE_NAME}-dev"
       - name: Name and Tag
         shell: bash
         run: |
