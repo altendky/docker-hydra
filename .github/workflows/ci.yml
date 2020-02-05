@@ -40,7 +40,7 @@ jobs:
       IMAGE_TAG: ${{ matrix.config.platform }}-${{ matrix.pythons.name }}
     steps:
       - name: PR Name Suffix
-        if: github.event != 'push'
+        if: github.event_name != 'push'
         shell: bash
         run: |
           echo "::set-env name=IMAGE_NAME::${IMAGE_NAME}-dev"
