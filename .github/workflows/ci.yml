@@ -13,8 +13,8 @@ on:
 
 jobs:
   ci:
-    name: ${{ matrix.config.
-    runs-on: ${{ matrix.config.os }} ${{ matrix.pythons.name }}
+    name: ${{ matrix.config.name }} ${{ matrix.pythons.name }}
+    runs-on: ${{ matrix.config.runs-on }}
     strategy:
       matrix:
         pythons:
@@ -28,11 +28,11 @@ jobs:
             versions: (3 pypy3)
         config:
           - name: Linux
-            os: ubuntu-18.04
+            runs-on: ubuntu-18.04
             base: ubuntu:19.10
             platform: ubuntu
           - name: Windows
-            os: windows-2019
+            runs-on: windows-2019
             base: mcr.microsoft.com/windows/servercore:ltsc2019
             platform: windows
 #          - name: macOS
