@@ -22,7 +22,8 @@ RUN Get-Content C:/ProgramData/chocolatey/logs/chocolatey.log
 
 SHELL ["C:/msys2/usr/bin/bash", "--login", "-c"]
 
-RUN "pacman --noconfirm -Syuu"
+# gee golly...  https://github.com/msys2/MSYS2-packages/issues/1141
+RUN "timeout 300 pacman --noconfirm -Syuu"
 RUN "pacman --noconfirm -S git"
 
 # install pyenv
