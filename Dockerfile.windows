@@ -22,8 +22,8 @@ RUN Get-Content C:/ProgramData/chocolatey/logs/chocolatey.log
 
 SHELL ["C:/msys2/usr/bin/bash", "--login", "-c"]
 
-RUN "pacman -Syuu"
-RUN "pacman -S git"
+RUN "pacman --noconfirm -Syuu"
+RUN "pacman --noconfirm -S git"
 
 # install pyenv
 RUN git clone https://github.com/pyenv-win/pyenv-win.git "${PYENV_ROOT}"
