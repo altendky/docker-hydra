@@ -26,18 +26,27 @@ jobs:
           - name: 3-latest
             versions: (3 pypy3)
         config:
-          - os: ubuntu-18.04
+          - os: ubuntu-latest
+            base: ubuntu:18.04
+            dockerfile_platform: ubuntu
+            image_tag: ubuntu-18.04
+          - os: ubuntu-latest
             base: ubuntu:19.10
-            platform: ubuntu
+            dockerfile_platform: ubuntu
+            image_tag: ubuntu-19.10
+          - os: ubuntu-latest
+            base: ubuntu:20.04
+            dockerfile_platform: ubuntu
+            image_tag: ubuntu-20.04
 #          - os: windows-2019
 #            base: mcr.microsoft.com/windows/servercore:ltsc2019
-#            platform: windows
+#            dockerfile_platform: windows
 #          - os: macos-10.15
 #            base: ?
-#            platform: macos
+#            dockerfile_platform: macos
     env:
       IMAGE_NAME: hydra
-      IMAGE_TAG: ${{ matrix.config.platform }}-${{ matrix.pythons.name }}
+      IMAGE_TAG: ${{ matrix.config.image_tag }}-${{ matrix.pythons.name }}
     steps:
       - name: PR Name Suffix
         if: github.event_name != 'push'
@@ -52,7 +61,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          docker build --pull --no-cache --tag "${IMAGE_NAME_TAG}" --build-arg FROM='${{ matrix.config.base }}' --build-arg PYTHONS="${{ matrix.pythons.versions }}" --file 'Dockerfile.${{ matrix.config.platform }}' .
+          docker build --pull --no-cache --tag "${IMAGE_NAME_TAG}" --build-arg FROM='${{ matrix.config.base }}' --build-arg PYTHONS="${{ matrix.pythons.versions }}" --file 'Dockerfile.${{ matrix.config.dockerfile_platform }}' .
           docker tag "${IMAGE_NAME_TAG}" "${DOCKER_USERNAME}/${IMAGE_NAME_TAG}"
         env:
           DOCKER_USERNAME: ${{ secrets.docker_username }}
