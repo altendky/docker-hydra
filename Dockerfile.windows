@@ -3,7 +3,7 @@ FROM $FROM
 
 ARG chocolateyVersion='0.10.15'
 
-ARG PYTHONS="(2.7 3.{5,6,7,8} pypy{2.7-7.{0,1,2,3},3.6-7.{0,1,2,3}})"
+ARG PYTHONS="(2.7 3.{5,6,7,8,9} pypy{2.7-7.{0,1,2,3},3.6-7.{0,1,2,3}})"
 
 #ENV PYENV_ROOT=C:\\pyenv
 #ENV PYENV=${PYENV_ROOT}\\pyenv-win
