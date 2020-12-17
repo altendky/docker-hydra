@@ -32,10 +32,6 @@ jobs:
             dockerfile_platform: ubuntu
             image_tag: ubuntu-18.04
           - os: ubuntu-latest
-            base: ubuntu:19.10
-            dockerfile_platform: ubuntu
-            image_tag: ubuntu-19.10
-          - os: ubuntu-latest
             base: ubuntu:20.04
             dockerfile_platform: ubuntu
             image_tag: ubuntu-20.04
