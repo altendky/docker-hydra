@@ -56,7 +56,7 @@ jobs:
       - name: Name and Tag
         shell: bash
         run: |
-          echo "echo IMAGE_NAME_TAG=${IMAGE_NAME}:${IMAGE_TAG} >> ${GITHUB_ENV}"
+          echo IMAGE_NAME_TAG=${IMAGE_NAME}:${IMAGE_TAG} >> ${GITHUB_ENV}
       - uses: actions/checkout@v1
       - name: Build
         shell: bash
