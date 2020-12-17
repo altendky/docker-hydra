@@ -15,6 +15,7 @@ jobs:
   ci:
     runs-on: ${{ matrix.config.os }}
     strategy:
+      fail-fast: false
       matrix:
         pythons:
           - name: 2-3-minors
@@ -30,10 +31,6 @@ jobs:
             base: ubuntu:18.04
             dockerfile_platform: ubuntu
             image_tag: ubuntu-18.04
-          - os: ubuntu-latest
-            base: ubuntu:19.10
-            dockerfile_platform: ubuntu
-            image_tag: ubuntu-19.10
           - os: ubuntu-latest
             base: ubuntu:20.04
             dockerfile_platform: ubuntu
@@ -52,11 +49,11 @@ jobs:
         if: github.event_name != 'push'
         shell: bash
         run: |
-          echo "::set-env name=IMAGE_NAME::${IMAGE_NAME}-dev"
+          echo IMAGE_NAME=${IMAGE_NAME}-dev >> ${GITHUB_ENV}
       - name: Name and Tag
         shell: bash
         run: |
-          echo "::set-env name=IMAGE_NAME_TAG::${IMAGE_NAME}:${IMAGE_TAG}"
+          echo IMAGE_NAME_TAG=${IMAGE_NAME}:${IMAGE_TAG} >> ${GITHUB_ENV}
       - uses: actions/checkout@v1
       - name: Build
         shell: bash
