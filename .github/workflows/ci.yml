@@ -45,19 +45,14 @@ jobs:
 #            base: ?
 #            dockerfile_platform: macos
     env:
-      ROOT_IMAGE_NAME: hydra
+      IMAGE_NAME: hydra
       IMAGE_TAG: ${{ matrix.config.image_tag }}-${{ matrix.pythons.name }}
     steps:
       - name: PR Name Suffix
         if: github.event_name != 'push'
         shell: bash
         run: |
-          echo "echo IMAGE_NAME=${ROOT_IMAGE_NAME}-dev >> ${GITHUB_ENV}"
-      - name: No Name Suffix
-        if: github.event_name == 'push'
-        shell: bash
-        run: |
-          echo "echo IMAGE_NAME=${ROOT_IMAGE_NAME} >> ${GITHUB_ENV}"
+          echo IMAGE_NAME=${IMAGE_NAME}-dev >> ${GITHUB_ENV}
       - name: Name and Tag
         shell: bash
         run: |
