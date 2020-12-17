@@ -56,7 +56,7 @@ jobs:
       - name: Name and Tag
         shell: bash
         run: |
-          echo "echo IMAGE_NAME_TAG=${IMAGE_NAME}:${IMAGE_TAG} >> ${GITHUB_ENV}"
+        echo "echo IMAGE_NAME_TAG=${IMAGE_NAME}:${IMAGE_TAG} >> ${GITHUB_ENV}
       - uses: actions/checkout@v1
       - name: Build
         shell: bash
@@ -69,7 +69,7 @@ jobs:
         shell: bash
         run: |
           docker run --rm "${IMAGE_NAME_TAG}" pyenv versions
-          docker run --rm "${IMAGE_NAME_TAG}" pip --version
+          docker ruIMAGE_NAME_TAGn --rm "${IMAGE_NAME_TAG}" pip --version
           docker run --rm "${IMAGE_NAME_TAG}" pip freeze --all
       - name: Upload
         shell: bash
