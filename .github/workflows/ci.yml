@@ -15,6 +15,7 @@ jobs:
   ci:
     runs-on: ${{ matrix.config.os }}
     strategy:
+      fail-fast: false
       matrix:
         pythons:
           - name: 2-3-minors
